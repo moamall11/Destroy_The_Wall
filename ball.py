@@ -10,6 +10,7 @@ class Ball(Sprite):
         self.game = game
         self.settings = game.settings
         self.center()
+        self.rect = pg.Rect(self.centerx - 15,self.centery - 15,30,30)
         #intialize values.
         self.red = True
         self.first_red_zone = True

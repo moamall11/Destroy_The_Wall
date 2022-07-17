@@ -44,7 +44,6 @@ class DestroyWall:
                 self._check_collision()
                 self._check_win()
                 self._update_screen()
-                pg.display.flip()
             else:
                 if not self.first_loop:
                     pg.mixer.music.fadeout(500)
@@ -90,7 +89,7 @@ class DestroyWall:
         #get the available space horizontally on the x axis.
         available_space_x = self.screen_rect.width - width
         #same thing with the y axis.
-        available_space_y = self.screen_rect.height - (14 * height)
+        available_space_y = self.screen_rect.centery + 100
         #now we will get the number of rectangles 
         #that we can put in the available space.
         number_rectangles_x = available_space_x // (2 * width)
@@ -182,6 +181,7 @@ class DestroyWall:
             rectangle.draw()
         self.score_board.draw()
         self.ball.draw()
+        pg.display.flip()
 
 
 if __name__ == '__main__':
