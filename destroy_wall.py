@@ -21,6 +21,10 @@ class DestroyWall:
         self.number_rectangles = len(self.wall.sprites())
         self.ball = Ball(self)
         self.score_board = ScoreBoard(self)
+        self.win_sound = pg.mixer.Sound("sounds/win.wav")
+        pg.mixer.music.load("sounds/music.ogg")
+        self.lose_sound = pg.mixer.Sound("sounds/lose.flac")
+        self.first_loop = True
         self.lost = False
         self.end_game = False
 
@@ -30,12 +34,21 @@ class DestroyWall:
         while True:
             self._check_events()
             if not self.end_game:
+                if self.first_loop:
+                    pg.mixer.music.play(-1)
+                    pg.mixer.music.set_volume(0.1)
+                    self.first_loop = False
                 self.rectangle.move()
                 self.ball.move()
                 self._check_lost()
                 self._check_collision()
+                self._check_win()
                 self._update_screen()
                 pg.display.flip()
+            else:
+                if not self.first_loop:
+                    pg.mixer.music.fadeout(500)
+                    self.first_loop = True
 
 
     def _check_events(self):
@@ -57,6 +70,9 @@ class DestroyWall:
             self.rectangle.moving_right = True
         elif event.key == pg.K_LEFT:
             self.rectangle.moving_left = True
+        elif event.key == pg.K_p:
+            game = DestroyWall()
+            game.run_game()
 
     def _check_key_up(self,event):
         """check for the release of any keys pressed"""
@@ -147,6 +163,15 @@ class DestroyWall:
                 self.lost = False
             else:
                 self.end_game = True
+                self.lose_sound.play()
+                self.lose_sound.set_volume(0.1)
+
+
+    def _check_win(self):
+        if len(self.wall.sprites()) == 0:
+            self.end_game = True
+            self.win_sound.play()
+            self.win_sound.set_volume(0.2)
 
 
     def _update_screen(self):
